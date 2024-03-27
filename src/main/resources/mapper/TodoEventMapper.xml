@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yy.dao.TodoEventMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yy.entity.TodoEvent">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="event_name" property="eventName" />
+        <association property="user" javaType="com.yy.entity.User">
+            <id column="u_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="password" property="password"/>
+            <result column="nick_name" property="nickName"/>
+            <result column="address" property="address"/>
+            <result column="sex" property="sex"/>
+            <result column="age" property="age"/>
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        te.id, te.user_id, te.event_name,
+        u.id AS u_id, u.username, u.password, u.nick_name, u.address, u.sex, u.age
+    </sql>
+
+    <select id="findWithUser" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM todo_event te
+        LEFT JOIN user u ON te.user_id = u.id
+        WHERE te.id = #{eventId}
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yy.dao.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.yy.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="nick_name" property="nickName" />
+        <result column="address" property="address" />
+        <result column="sex" property="sex" />
+        <result column="age" property="age" />
+        <result column="imag" property="imag" />
+        <!-- 添加一个关联查询映射 -->
+        <collection property="todoEvents" ofType="com.yy.entity.TodoEvent">
+            <id column="todo_event_id" property="id"/>
+            <result column="event_name" property="eventName"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, password, nick_name, address, sex, age,imag
+    </sql>
+
+    <!-- 查询用户及其对应的待办事件列表 -->
+    <select id="findUserWithTodoEvents" resultMap="BaseResultMap">
+        SELECT u.id, u.username, u.password, u.nick_name, u.address, u.sex,u.imag, u.age,
+               te.id AS todo_event_id, te.event_name
+        FROM user u LEFT JOIN todo_event te ON u.id = te.user_id
+        WHERE u.id = #{userId}
+    </select>
+
+</mapper>
